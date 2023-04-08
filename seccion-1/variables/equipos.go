@@ -2,17 +2,17 @@ package main
 
 import "fmt"
 
-func main(){
+func main() {
 	var (
-		primerEquipo = "Boca"
-		segundoEquipo = "River"
-		tercerEquipo = "Velez"
-		cuartoEquipo = "Flamengo"
-		quintoEquipo = "Real Madrid"
-		titulosBoca = 74
-		titulosRiver = 69
-		titulosVelez = 16
-		titulosFlamengo = 21
+		primerEquipo      = "Boca"
+		segundoEquipo     = "River"
+		tercerEquipo      = "Velez"
+		cuartoEquipo      = "Flamengo"
+		quintoEquipo      = "Real Madrid"
+		titulosBoca       = 74
+		titulosRiver      = 69
+		titulosVelez      = 16
+		titulosFlamengo   = 21
 		titulosRealMadrid = 97
 	)
 

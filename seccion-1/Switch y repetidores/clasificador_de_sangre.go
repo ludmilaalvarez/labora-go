@@ -32,8 +32,7 @@ func clasificarSangre(tipoSangre string) string {
 	case "0-":
 		return "Grupo sanguineo 0, factor Rh negativo"
 	default:
-		fmt.Printf("El valor ingresado no es valido!")
+		return "El valor ingresado no es valido!"
 	}
 
-	return ""
 }

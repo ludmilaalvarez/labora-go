@@ -161,12 +161,12 @@ func buscar(estudiantes []Estudiante) {
 
 	for i := 0; i < len(estudiantes); i++ {
 		if estudiantes[i].codigo == codigo {
-			fmt.Printf("Se encontro el estudiante con Nombre: %s, nota: %.2f, codigo: %s", estudiantes[i].nombre, estudiantes[i].nota, estudiantes[i].codigo)
+			fmt.Printf("Se encontro el estudiante con Nombre: %s, nota: %.2f, codigo: %s\n", estudiantes[i].nombre, estudiantes[i].nota, estudiantes[i].codigo)
 			encontrado = true
 		}
 	}
 	if !encontrado {
-		fmt.Printf("No existe nigun estudiante con el codigo %s", codigo)
+		fmt.Printf("No existe nigun estudiante con el codigo %s\n", codigo)
 	}
 
 }

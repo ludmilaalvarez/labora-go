@@ -182,14 +182,9 @@ func buscarPersona(personas []Persona) {
 }
 
 func masaCorporal(personas []Persona) {
-	//	personasIMC:= make([]Persona, len(personas))
-	//copy(personas, personas)
 	for i := 0; i < 5; i++ {
 		alturaTemp := float64(float64(personas[i].altura) / float64(100))
-		//		fmt.Println(alturaTemp)
 		imc := (float64(personas[i].peso) / (alturaTemp * alturaTemp))
-		//		fmt.Println(imc)
-		//personasIMC= personas[i].append("IMC" imc)
 		if imc < 18.5 {
 			fmt.Printf("Persona %d:\n \tNombre: %s, Edad: %d, Altura:%d, Peso:%d, \n\t IMC: %.2f, Bajo peso \n", i+1, personas[i].nombre, personas[i].edad, personas[i].altura, personas[i].peso, imc)
 		}

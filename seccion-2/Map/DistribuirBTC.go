@@ -50,8 +50,6 @@ func distribuirBTC(usuarios []string, monedas int, distribution map[string]int) 
 		if vocales > 10 {
 			vocales = 10
 		}
-		fmt.Println(vocales)
-
 		distribution[nombre] = vocales
 	}
 	return distribution

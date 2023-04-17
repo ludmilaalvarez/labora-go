@@ -17,13 +17,11 @@ func main() {
 	fmt.Scan(&secuencia.cadena1)
 	fmt.Print("Ingrese la segunda secuencia de ADN: ")
 	fmt.Scan(&secuencia.cadena2)
-
+	fmt.Print("Las secuencia de ADN son iguales:")
 	fmt.Println(compararADN(secuencia))
 }
 
 func compararADN(x ADN) bool {
-	//	s := []string{x.cadena2, x.cadena2}
-	//	resultado := strings.Join(s, "")
 	resultado := x.cadena2 + x.cadena2
 	return strings.Contains(resultado, x.cadena1)
 }

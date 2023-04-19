@@ -30,7 +30,12 @@ func menu() {
 		fmt.Scan(&op)
 		switch op {
 		case 4:
-			break
+			if len(estudiantes) > 0 {
+				defer func() {
+					promedio(estudiantes)
+					NotaMinMax(estudiantes)
+				}()
+			}
 		case 1:
 			estudiantes = append(estudiantes, completarDatos())
 		case 2:
@@ -40,14 +45,6 @@ func menu() {
 		}
 
 	}
-	defer func() {
-		promedio(estudiantes)
-		NotaMinMax(estudiantes)
-
-	}()
-
-	//	defer
-
 }
 func completarDatos() Estudiante {
 
@@ -153,26 +150,17 @@ func promedio(estudiantes []Estudiante) {
 }
 
 func NotaMinMax(estudiantes []Estudiante) {
-	var (
-		maxnota   float64
-		minnota   float64 = 99.0
-		alumnomax Estudiante
-		alumnomin Estudiante
-	)
-	//	minnota = estudiantes[0].nota
-	//	alumnomin = estudiantes[0]
-	for i := 0; i < len(estudiantes); i++ {
-		if estudiantes[i].nota > maxnota {
-			maxnota = estudiantes[i].nota
-			alumnomax = estudiantes[i]
-		}
-		if estudiantes[i].nota < minnota {
-			minnota = estudiantes[i].nota
-			alumnomin = estudiantes[i]
-		}
 
-	}
-	fmt.Printf("El estudiante con mayor nota es:\n\t Nombre: %s, Nota: %.2f, Codigo: %s\n", alumnomax.nombre, alumnomax.nota, alumnomax.codigo)
-	fmt.Printf("El estudiante con menor nota es:\n\t Nombre: %s, Nota: %.2f, Codigo: %s\n\n", alumnomin.nombre, alumnomin.nota, alumnomin.codigo)
+	sort.Slice(estudiantes, func(i, j int) bool {
+		return estudiantes[i].nota < estudiantes[j].nota
+	})
 
+	fmt.Printf("El estudiante con mayor nota es:\n\t Nombre: %s, Nota: %.2f, Codigo: %s\n",
+		estudiantes[len(estudiantes)-1].nombre,
+		estudiantes[len(estudiantes)-1].nota,
+		estudiantes[len(estudiantes)-1].codigo)
+	fmt.Printf("El estudiante con menor nota es:\n\t Nombre: %s, Nota: %.2f, Codigo: %s\n\n",
+		estudiantes[0].nombre,
+		estudiantes[0].nota,
+		estudiantes[0].codigo)
 }

@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 func main() {
 	var opcion int64
+
 	canalsms := make(chan string, 100)
 	canalemail := make(chan string, 100)
 	canalpush := make(chan string, 100)
@@ -33,31 +35,47 @@ func main() {
 
 func procesarMensajes(canalsms, canalemail, canalpush chan string) {
 	var tipo int64
+	var wg sync.WaitGroup
+
 	continuar := 1
-	fmt.Print("Ingrese el tipo de Mensaje que desea procesar:\n\t1.SMS\n\t2.Email\n\t3.Push\n\t4.Todos")
+
+	fmt.Print("Ingrese el tipo de Mensaje que desea procesar:\n\t",
+		"1.SMS\n\t",
+		"2.Email\n\t",
+		"3.Push\n\t",
+		"4.Todos")
 	fmt.Scan(&tipo)
+
 	switch tipo {
 	case 1:
 		for continuar == 1 {
-			go procesarSMS(canalsms)
+			wg.Add(1)
+			go procesarSMS(canalsms, &wg)
+			wg.Wait()
 			fmt.Print("\nSi desea continuar procesando mensajes presione 1...")
 			fmt.Scan(&continuar)
 		}
 	case 2:
 		for continuar == 2 {
-			go procesarEmail(canalemail)
+			wg.Add(1)
+			go procesarEmail(canalemail, &wg)
+			wg.Wait()
 			fmt.Print("Si desea continuar procesando mensajes presione 1...")
 			fmt.Scan(&continuar)
 		}
 	case 3:
 		for continuar == 1 {
-			go procesarPush(canalpush)
+			wg.Add(1)
+			go procesarPush(canalpush, &wg)
+			wg.Wait()
 			fmt.Print("Si desea continuar procesando mensajes presione 1...")
 			fmt.Scan(&continuar)
 		}
 	case 4:
 		for continuar == 1 {
+			wg.Add(1)
 			go procesarTodos(canalsms, canalemail, canalpush)
+			wg.Wait()
 			fmt.Print("Si desea continuar procesando mensajes presione 1...")
 			fmt.Scan(&continuar)
 		}
@@ -65,30 +83,45 @@ func procesarMensajes(canalsms, canalemail, canalpush chan string) {
 
 }
 
-func procesarSMS(canalsms <-chan string) {
+func procesarSMS(canalsms <-chan string, wg *sync.WaitGroup) {
 	var mensaje string
+
+	defer wg.Done()
+
 	mensaje = <-canalsms
+
 	fmt.Printf("SMS: %s\n", mensaje)
 }
 
-func procesarEmail(canalemail <-chan string) {
+func procesarEmail(canalemail <-chan string, wg *sync.WaitGroup) {
 	var mensaje string
+
+	defer wg.Done()
+
 	mensaje = <-canalemail
+
 	fmt.Printf("Email: %s\n", mensaje)
 }
 
-func procesarPush(canalpush <-chan string) {
+func procesarPush(canalpush <-chan string, wg *sync.WaitGroup) {
 	var mensaje string
+
+	defer wg.Done()
+
 	mensaje = <-canalpush
+
 	fmt.Printf("Notificacion Push: %s\n", mensaje)
 }
 
 func procesarTodos(canalsms, canalemail, canalpush chan string) {
+	var wg sync.WaitGroup
+	wg.Add(3)
 	for i := 0; i < 5; i++ {
-		go procesarSMS(canalsms)
-		go procesarEmail(canalemail)
-		go procesarPush(canalpush)
+		go procesarSMS(canalsms, &wg)
+		go procesarEmail(canalemail, &wg)
+		go procesarPush(canalpush, &wg)
 	}
+	wg.Wait()
 }
 
 func ingresarMensaje(canalsms chan<- string, canalemail chan<- string, canalpush chan<- string) {

@@ -56,7 +56,7 @@ func procesarMensajes(canalsms, canalemail, canalpush chan string) {
 			fmt.Scan(&continuar)
 		}
 	case 2:
-		for continuar == 2 {
+		for continuar == 1 {
 			wg.Add(1)
 			go procesarEmail(canalemail, &wg)
 			wg.Wait()

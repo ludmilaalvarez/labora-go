@@ -73,9 +73,7 @@ func procesarMensajes(canalsms, canalemail, canalpush chan string) {
 		}
 	case 4:
 		for continuar == 1 {
-			wg.Add(1)
-			go procesarTodos(canalsms, canalemail, canalpush)
-			wg.Wait()
+			procesarTodos(canalsms, canalemail, canalpush)
 			fmt.Print("Si desea continuar procesando mensajes presione 1...")
 			fmt.Scan(&continuar)
 		}
@@ -84,43 +82,58 @@ func procesarMensajes(canalsms, canalemail, canalpush chan string) {
 }
 
 func procesarSMS(canalsms <-chan string, wg *sync.WaitGroup) {
-	var mensaje string
 
 	defer wg.Done()
 
-	mensaje = <-canalsms
+	select {
+	case mensaje, ok := <-canalsms:
+		if ok {
+			fmt.Printf("SMS: %s\n", mensaje)
+		} else {
+			fmt.Println("Canal SMS cerrado!")
+		}
+	default:
+		fmt.Println("El canal de SMS no tiene ningun mensaje")
+	}
 
-	fmt.Printf("SMS: %s\n", mensaje)
 }
 
 func procesarEmail(canalemail <-chan string, wg *sync.WaitGroup) {
-	var mensaje string
-
 	defer wg.Done()
 
-	mensaje = <-canalemail
-
-	fmt.Printf("Email: %s\n", mensaje)
+	select {
+	case mensaje, ok := <-canalemail:
+		if ok {
+			fmt.Printf("Email: %s\n", mensaje)
+		} else {
+			fmt.Println("Canal Email cerrado!")
+		}
+	default:
+		fmt.Println("El canal de Email no tiene ningun mensaje")
+	}
 }
 
 func procesarPush(canalpush <-chan string, wg *sync.WaitGroup) {
-	var mensaje string
-
 	defer wg.Done()
 
-	mensaje = <-canalpush
-
-	fmt.Printf("Notificacion Push: %s\n", mensaje)
+	select {
+	case mensaje, ok := <-canalpush:
+		if ok {
+			fmt.Printf("Push: %s\n", mensaje)
+		} else {
+			fmt.Println("Canal Push cerrado!")
+		}
+	default:
+		fmt.Println("El canal de Push no tiene ningun mensaje")
+	}
 }
 
 func procesarTodos(canalsms, canalemail, canalpush chan string) {
 	var wg sync.WaitGroup
 	wg.Add(3)
-	for i := 0; i < 5; i++ {
-		go procesarSMS(canalsms, &wg)
-		go procesarEmail(canalemail, &wg)
-		go procesarPush(canalpush, &wg)
-	}
+	go procesarSMS(canalsms, &wg)
+	go procesarEmail(canalemail, &wg)
+	go procesarPush(canalpush, &wg)
 	wg.Wait()
 }
 
